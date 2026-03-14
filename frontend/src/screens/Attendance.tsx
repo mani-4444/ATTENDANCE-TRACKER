@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore, Session } from '../store';
-import { Check, X, Clock } from 'lucide-react';
+import { Check, X, Clock, Filter, Search } from 'lucide-react';
 
 const SessionCard = ({ session, subjectName }: { session: Session; subjectName: string }) => {
   const { toggleAttendance } = useStore();
@@ -16,7 +16,7 @@ const SessionCard = ({ session, subjectName }: { session: Session; subjectName: 
       
       <div className="flex bg-surface-50 p-1.5 rounded-2xl border border-gray-100 gap-1 mt-2 sm:mt-0">
         <button
-          onClick={() => toggleAttendance(session.id, 'Present')}
+          onClick={() => toggleAttendance(session.id, session.status === 'Present' ? 'Pending' : 'Present')}
           className={`px-8 sm:px-6 py-3 rounded-xl font-bold transition-all focus:outline-none flex items-center justify-center gap-2 flex-1 sm:flex-none
             ${session.status === 'Present' 
               ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' 
@@ -26,7 +26,7 @@ const SessionCard = ({ session, subjectName }: { session: Session; subjectName: 
           {session.status === 'Present' && <span className="sm:hidden ml-1">Present</span>}
         </button>
         <button
-          onClick={() => toggleAttendance(session.id, 'Absent')}
+          onClick={() => toggleAttendance(session.id, session.status === 'Absent' ? 'Pending' : 'Absent')}
           className={`px-8 sm:px-6 py-3 rounded-xl font-bold transition-all focus:outline-none flex items-center justify-center gap-2 flex-1 sm:flex-none
             ${session.status === 'Absent' 
               ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' 
@@ -42,19 +42,24 @@ const SessionCard = ({ session, subjectName }: { session: Session; subjectName: 
 
 const Attendance = () => {
   const { sessions, subjects, timetable, holidays } = useStore();
-  const [filter, setFilter] = useState<'All' | 'Pending'>('Pending');
+  const [subjectFilter, setSubjectFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All');
   
   const getSubjectName = (id: string) => subjects.find(s => s.id === id)?.name || 'Unknown';
   
-  const filteredSessions = sessions.filter(
-    (s) => filter === 'All' || s.status === 'Pending'
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const filteredSessions = sessions.filter(s => {
+    const matchesSubject = subjectFilter === 'All' || s.subjectId === subjectFilter;
+    const matchesStatus = statusFilter === 'All' || 
+                         (statusFilter === 'Unmarked' && s.status === 'Pending') ||
+                         (statusFilter === 'Present' && s.status === 'Present') ||
+                         (statusFilter === 'Absent' && s.status === 'Absent');
+    return matchesSubject && matchesStatus;
+  }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const today = new Date();
   const fullDayString = today.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-  const dayOfWeek = today.getDay(); // 0 is Sun, 1 is Mon
+  const dayOfWeek = today.getDay(); 
   
-  // Format to standard YYYY-MM-DD for checking holiday match (assuming timezone matches somewhat closely with simple split)
   const tzOffset = today.getTimezoneOffset() * 60000;
   const localISOTime = (new Date(today.getTime() - tzOffset)).toISOString().split('T')[0];
   const todayHoliday = holidays.find(h => h.date === localISOTime);
@@ -64,7 +69,7 @@ const Attendance = () => {
     <div className="animate-fade-in pb-10">
       
       {/* Today's Classes Section */}
-      <div className="mb-10">
+      <div className="mb-8">
         <div className="flex justify-between items-end mb-4">
           <div>
             <h2 className="text-2xl font-black text-surface-900 tracking-tight">Today</h2>
@@ -98,34 +103,58 @@ const Attendance = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-4 px-1">
-        <h2 className="text-xl font-black text-surface-900 tracking-tight">Track Progress</h2>
+      {/* Filters Section */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center justify-between mb-4 px-1">
+          <h2 className="text-xl font-black text-surface-900 tracking-tight flex items-center gap-2">
+            <Filter className="w-5 h-5 text-primary-500" />
+            Track Progress
+          </h2>
+          <span className="text-xs font-bold text-gray-400 uppercase bg-gray-100 px-3 py-1 rounded-full">
+            {filteredSessions.length} Sessions
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <p className="text-[10px] text-gray-400 uppercase font-black ml-1">Subject</p>
+            <select 
+              value={subjectFilter}
+              onChange={(e) => setSubjectFilter(e.target.value)}
+              className="w-full bg-white border border-gray-100 rounded-2xl px-4 py-4 font-bold text-surface-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlPSJncmF5Ij48cGF0aCBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTE5IDlsLTcgNy03LTciLz48L3N2Zz4=')] bg-[length:20px] bg-[right_1rem_center] bg-no-repeat"
+            >
+              <option value="All">All Subjects</option>
+              {subjects.map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <p className="text-[10px] text-gray-400 uppercase font-black ml-1">Status</p>
+            <div className="flex bg-gray-100/50 p-1.5 rounded-2xl border border-gray-200/50">
+              {['All', 'Present', 'Absent', 'Unmarked'].map((status) => (
+                <button 
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${statusFilter === status ? 'bg-white shadow-sm text-primary-600 border border-gray-200/50' : 'text-gray-500 hover:text-surface-900'}`}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Sleek Tabs */}
-      <div className="flex bg-gray-100/50 p-1.5 rounded-2xl mb-6 w-full max-w-sm border border-gray-200/50">
-        <button 
-          onClick={() => setFilter('Pending')}
-          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${filter === 'Pending' ? 'bg-white shadow-sm text-primary-600 border border-gray-200/50' : 'text-gray-500 hover:text-surface-900'}`}
-        >
-          Pending
-        </button>
-        <button 
-          onClick={() => setFilter('All')}
-          className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${filter === 'All' ? 'bg-white shadow-sm text-primary-600 border border-gray-200/50' : 'text-gray-500 hover:text-surface-900'}`}
-        >
-          All Sessions
-        </button>
-      </div>
-
+      {/* Sessions List */}
       <div className="space-y-4">
         {filteredSessions.length === 0 ? (
           <div className="text-center py-16 px-6 bg-white rounded-[2rem] border border-gray-100 shadow-sm border-dashed">
             <div className="w-20 h-20 bg-surface-50 rounded-full flex items-center justify-center mx-auto mb-6">
                <Clock className="w-10 h-10 text-gray-300" />
             </div>
-            <p className="text-surface-900 font-black text-2xl mb-2">You're all caught up!</p>
-            <p className="text-gray-400 font-medium">No {filter === 'Pending' ? 'pending classes' : 'classes found'}.</p>
+            <p className="text-surface-900 font-black text-2xl mb-2">No matching sessions</p>
+            <p className="text-gray-400 font-medium">Try changing your filters.</p>
           </div>
         ) : (
           filteredSessions.map(session => (
