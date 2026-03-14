@@ -1,21 +1,40 @@
-import React, { useState } from 'react';
-import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, CalendarDays, CalendarOff, Settings, TrendingUp, Menu, X, LogOut } from 'lucide-react';
-import { useStore } from '../store';
+import React from "react";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  CheckSquare,
+  CalendarDays,
+  BookOpen,
+  CalendarOff,
+  TrendingUp,
+  Settings,
+  LogOut,
+} from "lucide-react";
+import { useStore } from "../store";
 
 const TopBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useStore();
+  const { logout, studentName } = useStore();
+
   const getTitle = () => {
     switch (location.pathname) {
-      case '/app/dashboard': return 'Dashboard';
-      case '/app/attendance': return 'Track Progress';
-      case '/app/timetable': return 'Weekly Timetable';
-      case '/app/holidays': return 'Holidays';
-      case '/app/predictor': return 'Smart Predictor';
-      case '/app/settings': return 'Settings';
-      default: return 'Smart Attendance';
+      case "/app/dashboard":
+        return "Dashboard";
+      case "/app/attendance":
+        return "Track Progress";
+      case "/app/timetable":
+        return "Weekly Timetable";
+      case "/app/subjects":
+        return "Subjects Dashboard";
+      case "/app/holidays":
+        return "Holidays";
+      case "/app/predictor":
+        return "Smart Predictor";
+      case "/app/settings":
+        return "Settings";
+      default:
+        return "Smart Attendance";
     }
   };
 
@@ -25,30 +44,31 @@ const TopBar = () => {
         {getTitle()}
       </h1>
       <div className="flex items-center gap-4">
-        <button 
+        <button
           onClick={() => {
             logout();
-            navigate('/login');
+            navigate("/login");
           }}
           className="md:hidden flex items-center justify-center p-2 rounded-xl text-rose-500 hover:bg-rose-50 transition-colors"
         >
           <LogOut className="w-5 h-5" />
         </button>
-        <div className="h-9 w-9 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 font-bold shadow-sm border border-primary-100">
-          MR
-        </div>
+        <span className="text-sm font-bold text-gray-500">
+          {studentName || "Student"}
+        </span>
       </div>
     </header>
   );
 };
 
 const navItems = [
-  { name: 'Dashboard', path: '/app/dashboard', icon: LayoutDashboard },
-  { name: 'Track', path: '/app/attendance', icon: CheckSquare },
-  { name: 'Timetable', path: '/app/timetable', icon: CalendarDays },
-  { name: 'Holidays', path: '/app/holidays', icon: CalendarOff },
-  { name: 'Predictor', path: '/app/predictor', icon: TrendingUp },
-  { name: 'Settings', path: '/app/settings', icon: Settings },
+  { name: "Dashboard", path: "/app/dashboard", icon: LayoutDashboard },
+  { name: "Track", path: "/app/attendance", icon: CheckSquare },
+  { name: "Timetable", path: "/app/timetable", icon: CalendarDays },
+  { name: "Subjects", path: "/app/subjects", icon: BookOpen },
+  { name: "Holidays", path: "/app/holidays", icon: CalendarOff },
+  { name: "Predictor", path: "/app/predictor", icon: TrendingUp },
+  { name: "Settings", path: "/app/settings", icon: Settings },
 ];
 
 const Sidebar = () => {
@@ -61,7 +81,9 @@ const Sidebar = () => {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/30">
             <CheckSquare className="text-white w-6 h-6" />
           </div>
-          <span className="font-black text-2xl tracking-tight text-surface-900">TrackMate</span>
+          <span className="font-black text-2xl tracking-tight text-surface-900">
+            TrackMate
+          </span>
         </div>
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-2">
@@ -74,8 +96,8 @@ const Sidebar = () => {
                     className={({ isActive }) =>
                       `group flex gap-x-3 rounded-xl p-3 text-sm font-bold leading-6 transition-all duration-300 ${
                         isActive
-                          ? 'bg-primary-50 text-primary-700 shadow-sm border border-primary-100/50'
-                          : 'text-gray-500 hover:text-primary-600 hover:bg-gray-50'
+                          ? "bg-primary-50 text-primary-700 shadow-sm border border-primary-100/50"
+                          : "text-gray-500 hover:text-primary-600 hover:bg-gray-50"
                       }`
                     }
                   >
@@ -91,7 +113,7 @@ const Sidebar = () => {
           <button
             onClick={() => {
               logout();
-              navigate('/login');
+              navigate("/login");
             }}
             className="group flex w-full items-center gap-x-3 rounded-xl p-3 text-sm font-bold leading-6 text-rose-500 hover:bg-rose-50 transition-all duration-300"
           >
@@ -116,16 +138,21 @@ const BottomNav = () => {
               to={item.path}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center w-full h-14 rounded-2xl transition-all duration-300 ${
-                  isActive 
-                    ? 'text-primary-600 bg-primary-50 shadow-sm' 
-                    : 'text-gray-400 hover:text-gray-900'
+                  isActive
+                    ? "text-primary-600 bg-primary-50 shadow-sm"
+                    : "text-gray-400 hover:text-gray-900"
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon className={`w-[22px] h-[22px] mb-1 ${isActive ? 'scale-110' : ''} transition-transform`} strokeWidth={2.5} />
-                  <span className="text-[10px] font-bold leading-none">{item.name}</span>
+                  <Icon
+                    className={`w-[22px] h-[22px] mb-1 ${isActive ? "scale-110" : ""} transition-transform`}
+                    strokeWidth={2.5}
+                  />
+                  <span className="text-[10px] font-bold leading-none">
+                    {item.name}
+                  </span>
                 </>
               )}
             </NavLink>

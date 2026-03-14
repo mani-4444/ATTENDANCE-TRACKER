@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { supabase } from './lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { create } from "zustand";
+import { supabase } from "./lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 export type Subject = {
   id: string;
@@ -14,7 +14,7 @@ export type Session = {
   id: string;
   date: string;
   subjectId: string;
-  status: 'Present' | 'Absent' | 'Pending' | 'Holiday';
+  status: "Present" | "Absent" | "Pending" | "Holiday";
 };
 
 export type TimetableEntry = {
@@ -32,6 +32,7 @@ export type Holiday = {
 interface AppState {
   user: User | null;
   loading: boolean;
+  studentName: string;
   semesterStart: string;
   semesterEnd: string;
   requiredPercentage: number;
@@ -39,19 +40,28 @@ interface AppState {
   sessions: Session[];
   timetable: TimetableEntry[];
   holidays: Holiday[];
-  
+
   // Actions
   fetchData: () => Promise<void>;
-  toggleAttendance: (id: string, newStatus: 'Present' | 'Absent') => Promise<void>;
+  toggleAttendance: (
+    id: string,
+    newStatus: "Present" | "Absent" | "Pending",
+  ) => Promise<void>;
   updateSettings: (start: string, end: string, req: number) => Promise<void>;
+  updateProfile: (name: string) => Promise<void>;
   addHoliday: (name: string, date: string) => Promise<void>;
   deleteHoliday: (id: string) => Promise<void>;
-  
+
   addSubject: (name: string, color: string) => Promise<void>;
+  addSubjectWithDays: (
+    name: string,
+    color: string,
+    days: number[],
+  ) => Promise<void>;
   deleteSubject: (id: string) => Promise<void>;
   addTimetableEntry: (subjectId: string, day: number) => Promise<void>;
   deleteTimetableEntry: (id: string) => Promise<void>;
-  
+
   // Auth
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
@@ -62,8 +72,9 @@ interface AppState {
 export const useStore = create<AppState>((set, get) => ({
   user: null,
   loading: false,
-  semesterStart: '2023-08-01',
-  semesterEnd: '2023-11-30',
+  studentName: "",
+  semesterStart: "2023-08-01",
+  semesterEnd: "2023-11-30",
   requiredPercentage: 75,
   isAuthenticated: false,
   subjects: [],
@@ -71,7 +82,11 @@ export const useStore = create<AppState>((set, get) => ({
   timetable: [],
   holidays: [],
 
-  setUser: (user) => set({ user, isAuthenticated: !!user }),
+  setUser: (user) =>
+    set({
+      user,
+      isAuthenticated: !!user,
+    }),
 
   fetchData: async () => {
     const { user } = get();
@@ -87,61 +102,69 @@ export const useStore = create<AppState>((set, get) => ({
         { data: sessionsData },
         { data: attendanceData },
         { data: timetableData },
-        { data: holidaysData }
+        { data: holidaysData },
+        { data: profileData },
       ] = await Promise.all([
-        supabase.from('subjects').select('*').eq('user_id', user.id),
-        supabase.from('semester').select('*').eq('user_id', user.id).maybeSingle(),
-        supabase.from('sessions').select('*').eq('user_id', user.id),
-        supabase.from('attendance').select('*').eq('user_id', user.id),
-        supabase.from('timetable').select('*').eq('user_id', user.id),
-        supabase.from('holidays').select('*').eq('user_id', user.id)
+        supabase.from("subjects").select("*").eq("user_id", user.id),
+        supabase
+          .from("semester")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+        supabase.from("sessions").select("*").eq("user_id", user.id),
+        supabase.from("attendance").select("*").eq("user_id", user.id),
+        supabase.from("timetable").select("*").eq("user_id", user.id),
+        supabase.from("holidays").select("*").eq("user_id", user.id),
+        supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
       ]);
 
-      const subjects = (subjectsData || []).map(sub => {
-        // Find sessions for this subject
-        const subSessions = (sessionsData || []).filter(s => s.subject_id === sub.id);
-        const subAttendance = (attendanceData || []).filter(a => 
-          subSessions.some(s => s.id === a.session_id)
+      const subjects = (subjectsData || []).map((sub) => {
+        const subSessions = (sessionsData || []).filter(
+          (s) => s.subject_id === sub.id,
+        );
+        const subAttendance = (attendanceData || []).filter((a) =>
+          subSessions.some((s) => s.id === a.session_id),
         );
 
         return {
           id: sub.id,
           name: sub.name,
-          color: sub.color || 'bg-blue-500 text-white',
-          attended: subAttendance.filter(a => a.status === 'Present').length,
-          total: subAttendance.length
+          color: sub.color || "bg-blue-500 text-white",
+          attended: subAttendance.filter((a) => a.status === "Present").length,
+          total: subAttendance.length,
         };
       });
 
-      const sessions = (sessionsData || []).map(s => {
-        const att = (attendanceData || []).find(a => a.session_id === s.id);
+      const sessions = (sessionsData || []).map((s) => {
+        const att = (attendanceData || []).find((a) => a.session_id === s.id);
         return {
           id: s.id,
           date: s.class_date,
-          subjectId: s.subject_id || '',
-          status: (att?.status as any) || 'Pending'
+          subjectId: s.subject_id || "",
+          status: (att?.status as any) || "Pending",
         };
       });
 
       set({
         subjects,
         sessions,
-        semesterStart: semesterData?.start_date || '2023-08-01',
-        semesterEnd: semesterData?.end_date || '2023-11-30',
+        studentName: profileData?.name || "",
+        semesterStart: semesterData?.start_date || "2023-08-01",
+        semesterEnd: semesterData?.end_date || "2023-11-30",
         requiredPercentage: semesterData?.required_percentage || 75,
-        timetable: (timetableData || []).map(t => ({
+        timetable: (timetableData || []).map((t) => ({
           id: t.id,
-          subjectId: t.subject_id || '',
-          day: t.weekday
+          subjectId: t.subject_id || "",
+          day: t.weekday,
         })),
-        holidays: (holidaysData || []).map(h => ({
+        holidays: (holidaysData || []).map((h) => ({
           id: h.id,
           name: h.holiday_name,
-          date: h.holiday_date
-        }))
+          date: h.holiday_date,
+        })),
       });
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     } finally {
       set({ loading: false });
     }
@@ -152,10 +175,48 @@ export const useStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      await supabase.from('subjects').insert({ name, color, user_id: user.id });
+      await supabase.from("subjects").insert({ name, color, user_id: user.id });
       await get().fetchData();
     } catch (error) {
-      console.error('Error adding subject:', error);
+      console.error("Error adding subject:", error);
+    }
+  },
+
+  addSubjectWithDays: async (name, color, days) => {
+    const { user } = get();
+    if (!user) return;
+
+    try {
+      const { data: subject, error: subjectError } = await supabase
+        .from("subjects")
+        .insert({ name, color, user_id: user.id })
+        .select("id")
+        .single();
+
+      if (subjectError || !subject) {
+        throw subjectError || new Error("Subject creation failed");
+      }
+
+      if (days.length > 0) {
+        const timetableRows = days.map((weekday) => ({
+          subject_id: subject.id,
+          weekday,
+          user_id: user.id,
+        }));
+
+        const { error: timetableError } = await supabase
+          .from("timetable")
+          .insert(timetableRows);
+
+        if (timetableError) {
+          throw timetableError;
+        }
+      }
+
+      await get().fetchData();
+    } catch (error) {
+      console.error("Error creating subject with timetable:", error);
+      throw error;
     }
   },
 
@@ -164,10 +225,10 @@ export const useStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      await supabase.from('subjects').delete().eq('id', id);
+      await supabase.from("subjects").delete().eq("id", id);
       await get().fetchData();
     } catch (error) {
-      console.error('Error deleting subject:', error);
+      console.error("Error deleting subject:", error);
     }
   },
 
@@ -176,10 +237,12 @@ export const useStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      await supabase.from('timetable').insert({ subject_id: subjectId, weekday: day, user_id: user.id });
+      await supabase
+        .from("timetable")
+        .insert({ subject_id: subjectId, weekday: day, user_id: user.id });
       await get().fetchData();
     } catch (error) {
-      console.error('Error adding timetable entry:', error);
+      console.error("Error adding timetable entry:", error);
     }
   },
 
@@ -188,49 +251,45 @@ export const useStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      await supabase.from('timetable').delete().eq('id', id);
+      await supabase.from("timetable").delete().eq("id", id);
       await get().fetchData();
     } catch (error) {
-      console.error('Error deleting timetable entry:', error);
+      console.error("Error deleting timetable entry:", error);
     }
   },
 
   toggleAttendance: async (id, newStatus) => {
-    const { user, sessions } = get();
+    const { user } = get();
     if (!user) return;
 
-    // Optimistic update
-    const session = sessions.find(s => s.id === id);
-    if (!session) return;
-
     try {
-      // Check if attendance record exists
       const { data: existingAtt } = await supabase
-        .from('attendance')
-        .select('*')
-        .eq('session_id', id)
-        .eq('user_id', user.id)
-        .single();
+        .from("attendance")
+        .select("*")
+        .eq("session_id", id)
+        .eq("user_id", user.id)
+        .maybeSingle();
 
       if (existingAtt) {
-        await supabase
-          .from('attendance')
-          .update({ status: newStatus })
-          .eq('id', existingAtt.id);
-      } else {
-        await supabase
-          .from('attendance')
-          .insert({
-            session_id: id,
-            status: newStatus,
-            user_id: user.id
-          });
+        if (newStatus === "Pending") {
+          await supabase.from("attendance").delete().eq("id", existingAtt.id);
+        } else {
+          await supabase
+            .from("attendance")
+            .update({ status: newStatus })
+            .eq("id", existingAtt.id);
+        }
+      } else if (newStatus !== "Pending") {
+        await supabase.from("attendance").insert({
+          session_id: id,
+          status: newStatus,
+          user_id: user.id,
+        });
       }
-      
-      // Refresh data to ensure accuracy (especially for subject totals)
+
       await get().fetchData();
     } catch (error) {
-      console.error('Error toggling attendance:', error);
+      console.error("Error toggling attendance:", error);
     }
   },
 
@@ -240,25 +299,58 @@ export const useStore = create<AppState>((set, get) => ({
 
     try {
       const { data: existing } = await supabase
-        .from('semester')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+        .from("semester")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
       if (existing) {
         await supabase
-          .from('semester')
-          .update({ start_date: start, end_date: end, required_percentage: req })
-          .eq('id', existing.id);
+          .from("semester")
+          .update({
+            start_date: start,
+            end_date: end,
+            required_percentage: req,
+          })
+          .eq("id", existing.id);
       } else {
-        await supabase
-          .from('semester')
-          .insert({ start_date: start, end_date: end, required_percentage: req, user_id: user.id });
+        await supabase.from("semester").insert({
+          start_date: start,
+          end_date: end,
+          required_percentage: req,
+          user_id: user.id,
+        });
       }
-      
-      set({ semesterStart: start, semesterEnd: end, requiredPercentage: req });
+
+      set({
+        semesterStart: start,
+        semesterEnd: end,
+        requiredPercentage: req,
+      });
     } catch (error) {
-      console.error('Error updating settings:', error);
+      console.error("Error updating settings:", error);
+    }
+  },
+
+  updateProfile: async (name) => {
+    const { user } = get();
+    if (!user) return;
+
+    try {
+      const { data: existing } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase.from("profiles").update({ name }).eq("id", user.id);
+      } else {
+        await supabase.from("profiles").insert({ id: user.id, name });
+      }
+      set({ studentName: name });
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
   },
 
@@ -267,33 +359,40 @@ export const useStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      await supabase.from('holidays').insert({
+      await supabase.from("holidays").insert({
         holiday_name: name,
         holiday_date: date,
-        user_id: user.id
+        user_id: user.id,
       });
       await get().fetchData();
     } catch (error) {
-      console.error('Error adding holiday:', error);
+      console.error("Error adding holiday:", error);
     }
   },
-  
+
   deleteHoliday: async (id) => {
     const { user } = get();
     if (!user) return;
 
     try {
-      await supabase.from('holidays').delete().eq('id', id);
+      await supabase.from("holidays").delete().eq("id", id);
       await get().fetchData();
     } catch (error) {
-      console.error('Error deleting holiday:', error);
+      console.error("Error deleting holiday:", error);
     }
   },
 
   logout: async () => {
     await supabase.auth.signOut();
-    set({ user: null, isAuthenticated: false, subjects: [], sessions: [], timetable: [], holidays: [] });
+    set({
+      user: null,
+      isAuthenticated: false,
+      subjects: [],
+      sessions: [],
+      timetable: [],
+      holidays: [],
+    });
   },
 
-  setRequiredPercentage: (req) => set({ requiredPercentage: req })
+  setRequiredPercentage: (req) => set({ requiredPercentage: req }),
 }));
