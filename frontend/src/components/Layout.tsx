@@ -18,6 +18,13 @@ const TopBar = () => {
   const { logout, studentName } = useStore();
 
   const getTitle = () => {
+    if (location.pathname.startsWith("/app/attendance/subject/")) {
+      return "Subject Attendance";
+    }
+    if (location.pathname.startsWith("/app/attendance/date/")) {
+      return "Date Attendance";
+    }
+
     switch (location.pathname) {
       case "/app/dashboard":
         return "Dashboard";
