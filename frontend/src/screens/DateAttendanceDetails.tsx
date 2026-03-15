@@ -1,9 +1,11 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useStore } from "../store";
+import { ArrowLeft } from "lucide-react";
 
 const DateAttendanceDetails = () => {
   const { date } = useParams();
+  const navigate = useNavigate();
   const sessions = useStore((state) => state.sessions);
   const subjects = useStore((state) => state.subjects);
   const attendance = useStore((state) => state.attendance);
@@ -32,7 +34,14 @@ const DateAttendanceDetails = () => {
   return (
     <div className="animate-fade-in pb-10">
       <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100 min-h-[400px]">
-        <div className="mb-8 pb-6 border-b border-gray-100/50">
+        <div className="mb-8 pb-6 border-b border-gray-100/50 flex flex-col items-start gap-4">
+          <button 
+            onClick={() => navigate("/app/attendance")}
+            className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-surface-900 transition-colors bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
           <h2 className="text-2xl font-black text-surface-900">
             {dateLabel || "Date Details"}
           </h2>
