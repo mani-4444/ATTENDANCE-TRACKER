@@ -48,10 +48,10 @@ const Attendance = () => {
     <div className="animate-fade-in pb-10">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4 px-1">
-          <h2 className="text-xl font-black text-surface-900 tracking-tight">
+          <h2 className="text-xl font-black text-surface-900 dark:text-gray-100 tracking-tight dark:text-slate-100">
             Track Progress
           </h2>
-          <span className="text-xs font-bold text-gray-400 uppercase bg-gray-100 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold text-gray-400 uppercase bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full dark:bg-slate-800 dark:text-slate-400">
             {rows.length} Dates
           </span>
         </div>
@@ -59,14 +59,14 @@ const Attendance = () => {
 
       <div className="space-y-4">
         {rows.length === 0 ? (
-          <div className="text-center py-16 px-6 bg-white rounded-[2rem] border border-gray-100 shadow-sm border-dashed">
-            <div className="w-20 h-20 bg-surface-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Clock className="w-10 h-10 text-gray-300" />
+          <div className="text-center py-16 px-6 bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 shadow-sm border-dashed dark:bg-slate-900 dark:border-slate-800">
+            <div className="w-20 h-20 bg-surface-50 rounded-full flex items-center justify-center mx-auto mb-6 dark:bg-slate-800">
+              <Clock className="w-10 h-10 text-gray-300 dark:text-slate-500" />
             </div>
-            <p className="text-surface-900 font-black text-2xl mb-2">
+            <p className="text-surface-900 dark:text-gray-100 font-black text-2xl mb-2 dark:text-slate-100">
               No sessions found
             </p>
-            <p className="text-gray-400 font-medium">
+            <p className="text-gray-400 font-medium dark:text-slate-400">
               Sessions will appear here once generated.
             </p>
           </div>
@@ -74,10 +74,10 @@ const Attendance = () => {
           rows.map((row) => (
             <div
               key={row.date}
-              className="bg-white rounded-[1.5rem] p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="bg-white dark:bg-gray-900 rounded-[1.5rem] p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 dark:bg-slate-900 dark:border-slate-800"
             >
               <div className="flex-1">
-                <div className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-2">
+                <div className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-2 dark:text-slate-500">
                   {new Date(row.date).toLocaleDateString("en-US", {
                     weekday: "long",
                     month: "short",
@@ -91,7 +91,7 @@ const Attendance = () => {
                   <span className="bg-rose-50 text-rose-700 px-2.5 py-1 rounded-lg border border-rose-100">
                     Absent: {row.absent}
                   </span>
-                  <span className="bg-gray-50 text-gray-600 px-2.5 py-1 rounded-lg border border-gray-100">
+                  <span className="bg-gray-50 text-gray-600 px-2.5 py-1 rounded-lg border border-gray-100 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
                     Unmarked: {row.unmarked}
                   </span>
                 </div>

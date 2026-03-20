@@ -9,11 +9,11 @@ const StatCard = ({
   label: string;
   value: number | string;
 }) => (
-  <div className="bg-white rounded-[1.5rem] p-5 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)]">
+  <div className="bg-white dark:bg-gray-900 rounded-[1.5rem] p-5 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)]">
     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
       {label}
     </p>
-    <p className="text-3xl font-black text-surface-900">{value}</p>
+    <p className="text-3xl font-black text-surface-900 dark:text-gray-100">{value}</p>
   </div>
 );
 
@@ -27,8 +27,8 @@ const SubjectAttendance = () => {
   if (!subject) {
     return (
       <div className="animate-fade-in pb-10">
-        <div className="text-center py-16 px-6 bg-white rounded-[2rem] border border-gray-100 shadow-sm border-dashed">
-          <p className="text-surface-900 font-black text-2xl mb-2">
+        <div className="text-center py-16 px-6 bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 shadow-sm border-dashed">
+          <p className="text-surface-900 dark:text-gray-100 font-black text-2xl mb-2">
             Subject not found
           </p>
           <button
@@ -44,11 +44,11 @@ const SubjectAttendance = () => {
 
   return (
     <div className="animate-fade-in pb-10 space-y-6">
-      <div className="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-bento">
+      <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-6 border border-gray-100 shadow-bento">
         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
           Subject Attendance
         </p>
-        <h2 className="text-3xl font-black text-surface-900 tracking-tight">
+        <h2 className="text-3xl font-black text-surface-900 dark:text-gray-100 tracking-tight">
           {subject.name}
         </h2>
       </div>

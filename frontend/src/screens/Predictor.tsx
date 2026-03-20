@@ -92,7 +92,7 @@ const Predictor = () => {
   });
 
   return (
-    <div className="animate-fade-in pb-10 space-y-6">
+    <div className="animate-fade-in pb-10 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-full">
       <div className="flex justify-between items-end px-1 -mb-2">
         <h2 className="text-xl font-bold text-gray-400">{fullDayString}</h2>
       </div>
@@ -100,13 +100,13 @@ const Predictor = () => {
       {/* Selectors */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Subject Selector */}
-        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-6 shadow-sm border border-gray-200 dark:border-gray-700">
           <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block px-1">
             Select Subject to Analyze
           </label>
           <div className="relative group">
             <select
-              className="w-full bg-surface-50 border-2 border-gray-100 text-surface-900 text-lg font-bold rounded-2xl appearance-none focus:outline-none focus:ring-0 focus:border-primary-500 px-6 py-4 transition-all hover:border-gray-200 cursor-pointer"
+              className="w-full bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-lg font-bold rounded-2xl appearance-none focus:outline-none focus:ring-0 focus:border-primary-500 px-6 py-4 transition-all hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer"
               value={selectedSubjectId}
               onChange={(e) => setSelectedSubjectId(e.target.value)}
             >
@@ -130,13 +130,13 @@ const Predictor = () => {
         </div>
 
         {/* Target Percentage Filter */}
-        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-6 shadow-sm border border-gray-200 dark:border-gray-700">
           <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block px-1">
             Target Percentage
           </label>
           <div className="relative group">
             <select
-              className="w-full bg-surface-50 border-2 border-gray-100 text-surface-900 text-lg font-bold rounded-2xl appearance-none focus:outline-none focus:ring-0 focus:border-primary-500 px-6 py-4 transition-all hover:border-gray-200 cursor-pointer"
+              className="w-full bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-lg font-bold rounded-2xl appearance-none focus:outline-none focus:ring-0 focus:border-primary-500 px-6 py-4 transition-all hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer"
               value={targetPercent}
               onChange={(e) => setTargetPercent(Number(e.target.value))}
             >
@@ -172,7 +172,7 @@ const Predictor = () => {
         ></div>
 
         <div className="relative z-10 flex flex-col items-center justify-center">
-          <div className="mb-6 bg-white p-4 rounded-3xl shadow-sm border border-white/50 inline-block">
+          <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700 inline-block">
             {statusIcon}
           </div>
           <h3 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
@@ -191,29 +191,29 @@ const Predictor = () => {
         <PredictorCard
           title="Total Classes"
           value={hypotheticalTotal}
-          colorClass="bg-white text-surface-900 border border-gray-100"
+          colorClass="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
         />
         <PredictorCard
           title="Attended"
           value={currentAttended}
-          colorClass="bg-primary-50 text-primary-700 border border-primary-100/50"
+          colorClass="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
         />
         <PredictorCard
           title={`Required (${targetPercent}%)`}
           value={targetRequiredCount}
-          colorClass="bg-blue-50 text-blue-700 border border-blue-100/50"
+          colorClass="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
         />
         {isDanger ? (
           <PredictorCard
             title="Must Attend"
             value={classesNeededToAttend}
-            colorClass="bg-rose-50 text-rose-700 border border-rose-100"
+            colorClass="bg-white dark:bg-gray-800 text-rose-600 dark:text-rose-400 border border-gray-200 dark:border-gray-700"
           />
         ) : (
           <PredictorCard
             title="Safe to Miss"
             value={classesCanMiss}
-            colorClass="bg-emerald-50 text-emerald-700 border border-emerald-100"
+            colorClass="bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-gray-700"
           />
         )}
       </div>
