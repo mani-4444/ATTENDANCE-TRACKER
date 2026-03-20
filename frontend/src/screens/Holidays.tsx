@@ -20,9 +20,9 @@ const Holidays = () => {
 
   return (
     <div className="animate-fade-in pb-10">
-      <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100 min-h-[400px]">
+      <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100 min-h-[400px]">
         <div className="flex justify-between items-center mb-8 pb-6 border-b border-gray-100/50">
-          <h2 className="text-2xl font-black text-surface-900 flex items-center gap-3">
+          <h2 className="text-2xl font-black text-surface-900 dark:text-gray-100 flex items-center gap-3">
              <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600">
                <CalendarOff className="w-5 h-5 text-primary-500" />
              </div>
@@ -46,7 +46,7 @@ const Holidays = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Diwali"
-                  className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3.5 text-surface-900 font-bold focus:outline-none focus:ring-0 focus:border-primary-500 transition-all placeholder:text-gray-300 placeholder:font-medium"
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-3.5 text-surface-900 dark:text-gray-100 font-bold focus:outline-none focus:ring-0 focus:border-primary-500 transition-all placeholder:text-gray-300 placeholder:font-medium"
                 />
               </div>
               <div>
@@ -55,7 +55,7 @@ const Holidays = () => {
                   type="date" 
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3.5 text-surface-900 font-bold focus:outline-none focus:ring-0 focus:border-primary-500 transition-all font-sans"
+                  className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl px-5 py-3.5 text-surface-900 dark:text-gray-100 font-bold focus:outline-none focus:ring-0 focus:border-primary-500 transition-all font-sans"
                 />
               </div>
               <button 
@@ -73,7 +73,7 @@ const Holidays = () => {
              <div className="w-24 h-24 bg-surface-50 rounded-full flex items-center justify-center mx-auto mb-6">
                <CalendarOff className="w-10 h-10 text-gray-300" />
             </div>
-            <p className="text-surface-900 font-black text-2xl mb-2">No holidays added.</p>
+            <p className="text-surface-900 dark:text-gray-100 font-black text-2xl mb-2">No holidays added.</p>
             <p className="text-gray-400 font-medium pb-4">Tap the + button to add an upcoming holiday.</p>
           </div>
         ) : (
@@ -81,10 +81,10 @@ const Holidays = () => {
             {holidays.map((h) => (
               <div 
                 key={h.id} 
-                className="flex items-center justify-between p-5 rounded-3xl bg-white border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] hover:border-gray-200 hover:shadow-md transition-all group"
+                className="flex items-center justify-between p-5 rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] hover:border-gray-200 dark:border-gray-700 hover:shadow-md transition-all group"
               >
                 <div>
-                  <div className="font-black text-surface-900 text-xl tracking-tight mb-1">{h.name}</div>
+                  <div className="font-black text-surface-900 dark:text-gray-100 text-xl tracking-tight mb-1">{h.name}</div>
                   <div className="text-sm font-bold text-gray-400 flex items-center gap-1 uppercase tracking-wider">
                     {new Date(h.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                   </div>

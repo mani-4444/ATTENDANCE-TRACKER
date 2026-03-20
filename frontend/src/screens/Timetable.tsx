@@ -35,11 +35,11 @@ const Timetable = () => {
   }, [timetable, subjects]);
 
   return (
-    <div className="animate-fade-in pb-10">
-      <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100">
-        <div className="flex items-center mb-8 border-b border-gray-100/50 pb-6">
-          <h2 className="text-2xl font-black text-surface-900 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600">
+    <div className="animate-fade-in pb-10 bg-gray-50 dark:bg-gray-900 min-h-full">
+      <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
+          <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-primary-600">
               <CalendarDays className="w-5 h-5" />
             </div>
             Weekly Timetable
@@ -50,9 +50,9 @@ const Timetable = () => {
           {groupedByDay.map((group) => (
             <div
               key={group.dayName}
-              className="rounded-3xl bg-surface-50 border border-gray-100 p-5"
+              className="rounded-3xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-5"
             >
-              <h3 className="text-lg font-black text-surface-900 mb-3">
+              <h3 className="text-lg font-black text-gray-900 dark:text-gray-100 mb-3">
                 {group.dayName}
               </h3>
               {group.classes.length === 0 ? (
@@ -62,7 +62,7 @@ const Timetable = () => {
                   {group.classes.map((cls) => (
                     <div
                       key={cls.id}
-                      className="text-sm font-bold text-gray-600 bg-white border border-gray-100 rounded-xl px-3 py-2"
+                      className="text-sm font-bold text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2"
                     >
                       {cls.name}
                     </div>

@@ -57,58 +57,58 @@ const Settings = () => {
 
   return (
     <div className="animate-fade-in pb-10 max-w-2xl mx-auto">
-      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h2 className="text-2xl font-black text-surface-900 tracking-tight">
+      <div className="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+        <div className="p-6 border-b border-gray-100 dark:border-slate-800">
+          <h2 className="text-2xl font-black text-surface-900 dark:text-gray-100 tracking-tight dark:text-slate-100">
             Settings Dashboard
           </h2>
-          <p className="text-gray-500 font-medium mt-2">
+          <p className="text-gray-500 font-medium mt-2 dark:text-slate-400">
             Update your profile and semester settings.
           </p>
         </div>
 
         <form onSubmit={handleSave} className="p-6 space-y-6">
           <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block dark:text-slate-500">
               Student Name
             </label>
             <input
               type="text"
               value={nameVal}
               onChange={(e) => setNameVal(e.target.value)}
-              className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 font-bold focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 dark:text-gray-100 font-bold focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
               placeholder="Your name"
               disabled={saving}
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block dark:text-slate-500">
               Semester Duration
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
-                <p className="text-[10px] text-gray-400 uppercase font-black mb-1 ml-1">
+                <p className="text-[10px] text-gray-400 uppercase font-black mb-1 ml-1 dark:text-slate-500">
                   Start Date
                 </p>
                 <input
                   type="date"
                   value={startVal}
                   onChange={(e) => setStartVal(e.target.value)}
-                  className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 font-bold focus:outline-none"
+                  className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 dark:text-gray-100 font-bold focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
                   required
                   disabled={saving}
                 />
               </div>
               <div className="flex-1">
-                <p className="text-[10px] text-gray-400 uppercase font-black mb-1 ml-1">
+                <p className="text-[10px] text-gray-400 uppercase font-black mb-1 ml-1 dark:text-slate-500">
                   End Date
                 </p>
                 <input
                   type="date"
                   value={endVal}
                   onChange={(e) => setEndVal(e.target.value)}
-                  className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 font-bold focus:outline-none"
+                  className="w-full bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-surface-900 dark:text-gray-100 font-bold focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100"
                   required
                   disabled={saving}
                 />
@@ -116,9 +116,9 @@ const Settings = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between bg-surface-50/50 rounded-2xl p-4">
+          <div className="flex items-center justify-between bg-surface-50/50 rounded-2xl p-4 dark:bg-slate-800/70">
             <div>
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block dark:text-slate-500">
                 Required Percentage
               </label>
               <div className="flex items-center">
@@ -126,13 +126,15 @@ const Settings = () => {
                   type="number"
                   value={reqVal}
                   onChange={(e) => setReqVal(Number(e.target.value))}
-                  className="w-24 bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-center text-surface-900 font-black text-lg"
+                  className="w-24 bg-surface-50 border border-gray-100 rounded-xl px-4 py-3 text-center text-surface-900 dark:text-gray-100 font-black text-lg dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
                   min="0"
                   max="100"
                   required
                   disabled={saving}
                 />
-                <span className="text-gray-400 ml-3 font-bold text-xl">%</span>
+                <span className="text-gray-400 ml-3 font-bold text-xl dark:text-slate-400">
+                  %
+                </span>
               </div>
             </div>
           </div>

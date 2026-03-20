@@ -11,6 +11,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useStore } from "../store";
+import ThemeToggle from "./ThemeToggle";
 
 const TopBar = () => {
   const location = useLocation();
@@ -46,21 +47,22 @@ const TopBar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-x-4 border-b border-gray-200/50 bg-white/80 backdrop-blur-xl px-4 shadow-sm md:px-8">
+    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-x-4 border-b border-gray-200/50 bg-white/80 px-4 shadow-sm backdrop-blur-xl md:px-8 dark:border-slate-800/70 dark:bg-slate-950/80">
       <h1 className="text-xl md:text-2xl font-black bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
         {getTitle()}
       </h1>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <button
           onClick={() => {
             logout();
             navigate("/login");
           }}
-          className="md:hidden flex items-center justify-center p-2 rounded-xl text-rose-500 hover:bg-rose-50 transition-colors"
+          className="md:hidden flex items-center justify-center p-2 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
         >
           <LogOut className="w-5 h-5" />
         </button>
-        <span className="text-sm font-bold text-gray-500">
+        <span className="text-sm font-bold text-gray-500 dark:text-slate-400">
           {studentName || "Student"}
         </span>
       </div>
@@ -83,12 +85,12 @@ const Sidebar = () => {
   const { logout } = useStore();
   return (
     <div className="hidden md:flex md:w-64 lg:w-72 md:flex-col md:fixed md:inset-y-0 relative z-50">
-      <div className="flex grow flex-col gap-y-8 overflow-y-auto border-r border-gray-200/50 bg-surface-50 px-6 pb-4 pt-8 h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+      <div className="flex grow flex-col gap-y-8 overflow-y-auto border-r border-gray-200/50 bg-surface-50 px-6 pb-4 pt-8 h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-900">
         <div className="flex h-12 shrink-0 items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/30">
             <CheckSquare className="text-white w-6 h-6" />
           </div>
-          <span className="font-black text-2xl tracking-tight text-surface-900">
+          <span className="font-black text-2xl tracking-tight text-surface-900 dark:text-slate-100">
             TrackMate
           </span>
         </div>
@@ -104,7 +106,7 @@ const Sidebar = () => {
                       `group flex gap-x-3 rounded-xl p-3 text-sm font-bold leading-6 transition-all duration-300 ${
                         isActive
                           ? "bg-primary-50 text-primary-700 shadow-sm border border-primary-100/50"
-                          : "text-gray-500 hover:text-primary-600 hover:bg-gray-50"
+                          : "text-gray-500 hover:text-primary-600 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
                       }`
                     }
                   >
@@ -116,13 +118,13 @@ const Sidebar = () => {
             })}
           </ul>
         </nav>
-        <div className="mt-auto border-t border-gray-200/50 pt-4">
+        <div className="mt-auto border-t border-gray-200/50 pt-4 dark:border-slate-800">
           <button
             onClick={() => {
               logout();
               navigate("/login");
             }}
-            className="group flex w-full items-center gap-x-3 rounded-xl p-3 text-sm font-bold leading-6 text-rose-500 hover:bg-rose-50 transition-all duration-300"
+            className="group flex w-full items-center gap-x-3 rounded-xl p-3 text-sm font-bold leading-6 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-all duration-300"
           >
             <LogOut className="h-5 w-5 shrink-0" strokeWidth={2.5} />
             Logout
@@ -135,7 +137,7 @@ const Sidebar = () => {
 
 const BottomNav = () => {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-xl border-t border-gray-200/50 z-50 px-4 pb-safe shadow-[0_-8px_24px_rgba(0,0,0,0.04)]">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-xl border-t border-gray-200/50 z-50 px-4 pb-safe shadow-[0_-8px_24px_rgba(0,0,0,0.04)] dark:border-slate-800 dark:bg-slate-950/90">
       <div className="flex h-full items-center justify-between gap-1">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -147,7 +149,7 @@ const BottomNav = () => {
                 `flex flex-col items-center justify-center w-full h-14 rounded-2xl transition-all duration-300 ${
                   isActive
                     ? "text-primary-600 bg-primary-50 shadow-sm"
-                    : "text-gray-400 hover:text-gray-900"
+                    : "text-gray-400 hover:text-gray-900 dark:text-slate-500 dark:hover:text-slate-100"
                 }`
               }
             >
@@ -172,7 +174,7 @@ const BottomNav = () => {
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-gray-50/50 w-full font-sans">
+    <div className="min-h-screen bg-gray-50/50 w-full font-sans dark:bg-slate-950">
       <Sidebar />
       <div className="md:pl-64 lg:pl-72 flex flex-col min-h-screen">
         <TopBar />

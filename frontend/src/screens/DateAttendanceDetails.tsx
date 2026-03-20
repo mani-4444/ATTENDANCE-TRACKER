@@ -33,23 +33,23 @@ const DateAttendanceDetails = () => {
 
   return (
     <div className="animate-fade-in pb-10">
-      <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100 min-h-[400px]">
+      <div className="bg-white dark:bg-gray-900 rounded-[2rem] p-6 md:p-8 shadow-bento border border-gray-100 min-h-[400px]">
         <div className="mb-8 pb-6 border-b border-gray-100/50 flex flex-col items-start gap-4">
           <button 
             onClick={() => navigate("/app/attendance")}
-            className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-surface-900 transition-colors bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl"
+            className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-surface-900 dark:text-gray-100 transition-colors bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <h2 className="text-2xl font-black text-surface-900">
+          <h2 className="text-2xl font-black text-surface-900 dark:text-gray-100">
             {dateLabel || "Date Details"}
           </h2>
         </div>
 
         {sessionsForDate.length === 0 ? (
           <div className="text-center py-16 mt-4">
-            <p className="text-surface-900 font-black text-2xl mb-2">
+            <p className="text-surface-900 dark:text-gray-100 font-black text-2xl mb-2">
               No sessions for this date
             </p>
           </div>
@@ -76,14 +76,14 @@ const DateAttendanceDetails = () => {
               return (
                 <div
                   key={session.id}
-                  className={`bg-white rounded-[1.5rem] p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isFuture ? "opacity-60" : ""}`}
+                  className={`bg-white dark:bg-gray-900 rounded-[1.5rem] p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${isFuture ? "opacity-60" : ""}`}
                 >
-                  <div className="font-black text-surface-900 text-xl leading-tight">
+                  <div className="font-black text-surface-900 dark:text-gray-100 text-xl leading-tight">
                     {subjectName}
                   </div>
 
                   {isFuture ? (
-                    <span className="px-4 py-2 rounded-xl bg-gray-100 text-gray-400 text-sm font-bold">
+                    <span className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-400 text-sm font-bold">
                       Future — cannot mark
                     </span>
                   ) : (
@@ -93,7 +93,7 @@ const DateAttendanceDetails = () => {
                         className={`px-6 py-3 rounded-xl font-bold transition-all focus:outline-none ${
                           status === "present"
                             ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                            : "text-gray-400 hover:text-emerald-500 hover:bg-white"
+                            : "text-gray-400 hover:text-emerald-500 hover:bg-white dark:bg-gray-900"
                         }`}
                       >
                         Present
@@ -103,7 +103,7 @@ const DateAttendanceDetails = () => {
                         className={`px-6 py-3 rounded-xl font-bold transition-all focus:outline-none ${
                           status === "absent"
                             ? "bg-rose-500 text-white shadow-lg shadow-rose-500/30"
-                            : "text-gray-400 hover:text-rose-500 hover:bg-white"
+                            : "text-gray-400 hover:text-rose-500 hover:bg-white dark:bg-gray-900"
                         }`}
                       >
                         Absent

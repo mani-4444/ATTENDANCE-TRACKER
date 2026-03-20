@@ -30,18 +30,18 @@ const DashboardCard = ({
 
   return (
     <div
-      className={`p-6 rounded-3xl bg-white border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.06)] transition-all duration-300 relative overflow-hidden group flex flex-col justify-between h-full`}
+      className={`p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.06)] transition-all duration-300 relative overflow-hidden group flex flex-col justify-between h-full dark:bg-slate-900 dark:border-slate-800`}
     >
       <div className="flex justify-between items-start mb-6">
         <div>
-          <div className="font-bold text-surface-900 text-lg leading-tight mb-1">
+          <div className="font-bold text-surface-900 dark:text-gray-100 text-lg leading-tight mb-1 dark:text-slate-100">
             {subject.name}
           </div>
-          <div className="text-sm font-medium text-gray-500 flex flex-col items-start gap-1">
-            <span className="bg-gray-100 px-2 py-0.5 rounded-md text-gray-600">
+          <div className="text-sm font-medium text-gray-500 flex flex-col items-start gap-1 dark:text-slate-400">
+            <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md text-gray-600 dark:bg-slate-800 dark:text-slate-300">
               Till now: {subject.classesTillNow}
             </span>
-            <span className="bg-gray-100 px-2 py-0.5 rounded-md text-gray-600">
+            <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md text-gray-600 dark:bg-slate-800 dark:text-slate-300">
               Semester total: {subject.totalPossibleClasses}
             </span>
           </div>
@@ -55,13 +55,13 @@ const DashboardCard = ({
 
       {/* Progress Bar */}
       <div className="w-full mt-auto">
-        <div className="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
+        <div className="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider dark:text-slate-500">
           <span>Progress</span>
           <span>{reqPercent}% Req</span>
         </div>
-        <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden relative">
+        <div className="h-2.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden relative dark:bg-slate-800">
           <div
-            className={`absolute top-0 bottom-0 left-0 w-0.5 bg-gray-300 z-10 transition-all`}
+            className={`absolute top-0 bottom-0 left-0 w-0.5 bg-gray-300 z-10 transition-all dark:bg-slate-600`}
             style={{ left: `${reqPercent}%` }}
           />
           <div
@@ -112,7 +112,9 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 animate-fade-in pb-8">
       <div className="flex justify-between items-end px-1 -mb-2">
-        <h2 className="text-xl font-bold text-gray-400">{fullDayString}</h2>
+        <h2 className="text-xl font-bold text-gray-400 dark:text-slate-500">
+          {fullDayString}
+        </h2>
       </div>
 
       {/* Overview Hero - Bento Style */}
@@ -129,7 +131,7 @@ const Dashboard = () => {
             <div className="text-6xl md:text-7xl font-black tracking-tighter mb-2 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
               {overallPercentage.toFixed(1)}%
             </div>
-            <p className="text-gray-300 font-medium text-lg">
+            <p className="text-gray-300 font-medium text-lg dark:text-slate-300">
               {totalAttended} attended out of {totalClasses} classes held till
               now
             </p>
@@ -156,7 +158,7 @@ const Dashboard = () => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
-          <h2 className="text-xl font-black text-surface-900 tracking-tight">
+          <h2 className="text-xl font-black text-surface-900 dark:text-gray-100 tracking-tight">
             Subject Breakdown
           </h2>
         </div>
